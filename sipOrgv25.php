@@ -1,6 +1,6 @@
 <?php
 
-# SIPORG v2.5 PORT REPORTER - Free Edition 
+# SIPORG v3 PORT REPORTER
 # co[d]ed by Cold z3ro | HTLover
 # https://www.facebook.com/groups/hackteach.org/
 
@@ -26,7 +26,15 @@ if(!file_exists("./bugged")) { mkdir("./bugged"); }
 
 if (!isset($argv[2]))
 { 
-	 flag(); die;
+	if (empty($argv[1]))
+	{
+		flag(); die("\n Try: php $argv[0] -help\n\n");
+	}
+	if($argv[1]=="-help" )
+	{
+		flag();
+		die("\n[*] How to use SIPORG:\n [-] php $argv[0] listips.lst threads\n [-] php $argv[0] ipaddress.lst 100\n [+] Advice for low RAM machines set max threads 500\n\n");
+	}
 }
 $list 	= $argv[1]; // listfile
 $maxproc= $argv[2]; // max proc
@@ -195,8 +203,28 @@ function sIP_Check( $urls, $scheme='', $request_port='', $path='', $timeout = 10
 				}
 			}	
 		}
-			
-
+######### Special case 
+		if(preg_match('/FreePBX/i', $content, $match) || preg_match('/Elastix/i', $content, $match))
+		{
+				file_put_contents('./bugged/FreePBX.txt', "$url $match[1]\n", FILE_APPEND);
+		}
+		if(preg_match('/3cx/i', $content) || preg_match('/Gizmox/i', $content) || preg_match('/WebGUI.Forms/i', $content))
+		{
+				file_put_contents('./bugged/3cx.txt', "$url 3cx\n", FILE_APPEND);
+		}
+		if(preg_match('/beroNet/i', $content))
+		{
+				file_put_contents('./bugged/beroNet.txt', $url." beroNet\n", FILE_APPEND);
+		}
+		if(preg_match('/NGUCC/i', $content, $match) || preg_match('/OTello/i', $content, $match))
+		{
+				file_put_contents('./bugged/multi.txt', "$url $match[1]\n", FILE_APPEND);
+		}
+		if(preg_match('/xorcom/i', $content))
+		{
+				file_put_contents('./bugged/Xorcom.txt', $url." Xorcom CompletePBX\n", FILE_APPEND);
+		}
+######### end Special case 
 		//return array($response['http_code'],$title);
 		if(!empty($title))
 		{
@@ -390,9 +418,9 @@ function flag()
 	 ____  ___  ____    ___   ____    ____ 
 	/ ___||_ _||  _ \  / _ \ |  _ \  / ___|
 	\___ \ | | | |_) || | | || |_) || |  _ 
-	 ___) || | |  __/ | |_| ||  _ < | |_| |  \e[0m\e[31mv2.5 Free\e[0m\e[32
+	 ___) || | |  __/ | |_| ||  _ < | |_| |  \e[0m\e[31mv3\e[0m\e[32m
 	|____/|___||_|     \___/ |_| \_\ \____| 
-										\e[0m[+] PORT REPORTER\n
-										[+] One of HTLovers collection\n";
+				\e[0m[+] PORT REPORTER
+				[+] One of HTLovers collection\n\n";
 }
 ?>

@@ -1,8 +1,9 @@
 # SIPORG v2.5 PORT REPORTER - Free Edition
 
 This tools have been coded & provided by Cold z3ro
-Web page https://www.facebook.com/groups/hackteach.org/
-Please report any bugs in the group
+
+in case of bugs please report on group, https://www.facebook.com/groups/hackteach.org/
+
 
 
 # configure and install packages

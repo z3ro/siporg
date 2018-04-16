@@ -1,6 +1,6 @@
 <?php
 
-# SIPORG v3 PORT REPORTER
+# SIPORG v2.5 PORT REPORTER - Free Edition
 # co[d]ed by Cold z3ro | HTLover
 # https://www.facebook.com/groups/hackteach.org/
 
@@ -397,7 +397,7 @@ function flag()
 	 ____  ___  ____    ___   ____    ____ 
 	/ ___||_ _||  _ \  / _ \ |  _ \  / ___|
 	\___ \ | | | |_) || | | || |_) || |  _ 
-	 ___) || | |  __/ | |_| ||  _ < | |_| |  \e[0m\e[31mv3\e[0m\e[32m
+	 ___) || | |  __/ | |_| ||  _ < | |_| |  \e[0m\e[31mv2.5 Free\e[0m\e[32m
 	|____/|___||_|     \___/ |_| \_\ \____| 
 				\e[0m[+] PORT REPORTER
 				[+] One of HTLovers collection\n\n";

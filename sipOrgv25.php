@@ -203,28 +203,7 @@ function sIP_Check( $urls, $scheme='', $request_port='', $path='', $timeout = 10
 				}
 			}	
 		}
-######### Special case 
-		if(preg_match('/FreePBX/i', $content, $match) || preg_match('/Elastix/i', $content, $match))
-		{
-				file_put_contents('./bugged/FreePBX.txt', "$url $match[1]\n", FILE_APPEND);
-		}
-		if(preg_match('/3cx/i', $content) || preg_match('/Gizmox/i', $content) || preg_match('/WebGUI.Forms/i', $content))
-		{
-				file_put_contents('./bugged/3cx.txt', "$url 3cx\n", FILE_APPEND);
-		}
-		if(preg_match('/beroNet/i', $content))
-		{
-				file_put_contents('./bugged/beroNet.txt', $url." beroNet\n", FILE_APPEND);
-		}
-		if(preg_match('/NGUCC/i', $content, $match) || preg_match('/OTello/i', $content, $match))
-		{
-				file_put_contents('./bugged/multi.txt', "$url $match[1]\n", FILE_APPEND);
-		}
-		if(preg_match('/xorcom/i', $content))
-		{
-				file_put_contents('./bugged/Xorcom.txt', $url." Xorcom CompletePBX\n", FILE_APPEND);
-		}
-######### end Special case 
+
 		//return array($response['http_code'],$title);
 		if(!empty($title))
 		{

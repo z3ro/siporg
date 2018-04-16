@@ -7,7 +7,7 @@
 error_reporting(0);
 if( extension_loaded('curl') != true)
 {
-   die("\e[31mCURL extension is not available on your web server\nTRY:\e[0m sudo apt-get install php-curl \e[31mOR\e[0m sudo apt-get install php7.1-curl\n");
+   die("\e[31mCURL extension is not available on your web server\nTRY:\e[0m sudo apt-get install php-curl \e[31mOR\e[0m sudo apt-get install php7.0-curl\n");
 }else{
 	if( extension_loaded('pcntl') != true)
 	{

@@ -70,7 +70,7 @@ foreach (file("$list", FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) as $ipkey 
 			$shod_ports = array();
 			$nmap_ports = array();
 			$notneeded_ports = array(21, 123, 1234, 23, 3306, 5060, 995, 445, 25, 123, 179, 53, 500, 622, 753, 760, 786, 810, 894, 5000, 5001, 975, 69, 22, 465, 587, 993);
-			preg_match_all(';[0-9]{1,6}/tcp;', @shell_exec("nmap --min-rate 1000 --max-rate 2000 --max-retries 2 --host-timeout 15s -F -Pn --open $match[1]"), $matches);
+			preg_match_all(';[0-9]{1,6}/tcp;', @shell_exec("nmap -sV -T4 -O -F --version-light -Pn --open $match[1]"), $matches);
 			//preg_match_all(';[0-9]{1,6}/tcp;', @shell_exec("nmap -Pn --open $match[1]"), $matches);
 			foreach ($matches as $value)
 			{

@@ -187,7 +187,7 @@ function sIP_Check( $urls, $scheme='', $request_port='', $path='', $timeout = 10
 					preg_match("/content\=\"0; url\=(.*)\"/i", $content, $value) ||
 					preg_match("/content\='0; url\=(.*)'/i", $content, $value) ||
 					preg_match("/frame src\=\"(.*)\"/i", $content, $value) ||
-					preg_match("/frame src\=\'(.*)\'/i", $content, $value))
+					preg_match("/frame src\='(.*)'/i", $content, $value))
 					{
 						$httpx = parse_url(str_replace('..','',$value[1]));
 						if($httpx['host']=="")

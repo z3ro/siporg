@@ -359,6 +359,7 @@ function shodan($host, $timeout = 4 )
 	$content = curl_exec( $ch );
 	return getBetween($content, 'content="Ports open:', '" />');
 }
+
 function getBetween($content, $start, $end)
 {
 	$r = explode($start, $content);

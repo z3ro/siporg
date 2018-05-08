@@ -34,7 +34,7 @@ if (!isset($argv[2]))
 	}
 	if($argv[1]=="-help" )
 	{
-		die("\n[*] How to use SIPORG:\n [-] php $argv[0] listips.lst portrange threads\n [-] php $argv[0] ipaddress.lst 80-443 100\n [+] Advice for low RAM machines set max threads 500\n\n");
+		die("\n[*] How to use SIPORG:\n [-] php $argv[0] listips.lst threads\n [-] php $argv[0] ipaddress.lst 100\n [+] Advice for low RAM machines set max threads 500\n\n");
 	}
 	if(!file_exists($argv[1]))
 	{

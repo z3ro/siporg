@@ -27,15 +27,20 @@ if(!file_exists("./bugged")) { mkdir("./bugged"); }
 
 if (!isset($argv[2]))
 { 
+	flag();
 	if (empty($argv[1]))
 	{
-		flag(); die("\n Try: php $argv[0] -help\n\n");
+		die("\n Try: php $argv[0] -help\n\n");
 	}
 	if($argv[1]=="-help" )
 	{
-		flag();
-		die("\n[*] How to use SIPORG:\n [-] php $argv[0] listips.lst threads\n [-] php $argv[0] ipaddress.lst 100\n [+] Advice for low RAM machines set max threads 500\n\n");
+		die("\n[*] How to use SIPORG:\n [-] php $argv[0] listips.lst portrange threads\n [-] php $argv[0] ipaddress.lst 80-443 100\n [+] Advice for low RAM machines set max threads 500\n\n");
 	}
+	if(!file_exists($argv[1]))
+	{
+		die("\n $argv[1] File not Found\n\n");
+	}
+	die;
 }
 $list 	= $argv[1]; // listfile
 $maxproc= $argv[2]; // max proc

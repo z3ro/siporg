@@ -134,7 +134,7 @@ function sIP_Check( $urls, $scheme='', $request_port='', $path='', $timeout = 10
 	}
 
 	$ch = curl_init();
-	curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows; U; Windows NT 5.1; rv:1.7.3) Gecko/20041001 Firefox/0.10.1");
+	curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:56.0) Gecko/20100101 Firefox/56.0");
 	curl_setopt($ch, CURLOPT_URL, $url);
 	curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
 	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
@@ -349,7 +349,7 @@ function url_base($url)
 function shodan($host, $timeout = 4 )
 {
 	$ch = curl_init();
-	curl_setopt( $ch, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows; U; Windows NT 5.1; rv:1.7.3) Gecko/20041001 Firefox/0.10.1" );
+	curl_setopt( $ch, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:56.0) Gecko/20100101 Firefox/56.0" );
 	curl_setopt( $ch, CURLOPT_URL, 'https://www.shodan.io/host/'.$host );
 	curl_setopt( $ch, CURLOPT_SSL_VERIFYHOST, 0);
 	curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, 0);

@@ -14,5 +14,7 @@ in case of bugs please report on group, https://www.facebook.com/groups/HTLovers
 commands:
 1. locale-gen en_US en_US.UTF-8
 2. dpkg-reconfigure locales
-3. sudo apt-get install git gcc make php7.0 php7.0-curl nmap
-4. php sipOrgv25.php listips.list maxthreads
+3. apt-get update
+4. sudo apt-get install git gcc make php7.0 php7.0-curl nmap
+5. git clone --depth 1 https://github.com/z3ro/siporg.git siporg
+6. php sipOrgv25.php listips.list maxthreads

@@ -2,7 +2,10 @@
 
 # SIPORG v2.5 PORT REPORTER - Free Edition
 # co[d]ed by Cold z3ro | HTLover
-# https://www.facebook.com/groups/hackteach.org/
+# https://www.0x30.cc/
+# https://www.facebook.com/groups/HTLovers/
+# https://www.facebook.com/groups/HTLovers/
+# https://www.facebook.com/HTLovers.web/
 
 error_reporting(0);  
 ini_set('Memory_limit','-1');

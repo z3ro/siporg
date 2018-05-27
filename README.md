@@ -5,7 +5,7 @@ This tools have been coded & provided by Cold z3ro
 website: https://www.0x30.cc/
 
 
-in case of bugs please report on group, https://www.facebook.com/groups/2198105003750553/
+in case of bugs please report on group, https://www.facebook.com/groups/HTLovers/
 
 
 

@@ -1,14 +1,13 @@
 <?php
 
-# SIPORG v2.5 PORT REPORTER - Free Edition
+# SIPORG v3.5 PORT REPORTER - Free Edition || 11/19/2023
 # co[d]ed by Cold z3ro | HTLover
 # https://www.0x30.cc/
-# https://www.facebook.com/groups/HTLovers/
 # https://www.facebook.com/groups/HTLovers/
 # https://www.facebook.com/HTLovers.web/
 
 error_reporting(0);  
-ini_set('Memory_limit','-1');
+ini_set('memory_limit','-1');
 if( extension_loaded('curl') != true)
 {
    die("\e[31mCURL extension is not available on your web server\nTRY:\e[0m sudo apt-get install php-curl \e[31mOR\e[0m sudo apt-get install php7.0-curl\n");
@@ -23,10 +22,8 @@ if( extension_loaded('curl') != true)
 		}
 	}
 }
-$brutedir = "date_".@date("Y-m-d");
 
-if(!file_exists($brutedir)) { mkdir($brutedir); }
-if(!file_exists("./bugged")) { mkdir("./bugged"); }
+if(!file_exists("./sorted")) { mkdir("./sorted"); }
 
 if (!isset($argv[2]))
 { 
@@ -50,7 +47,6 @@ $maxproc= $argv[2]; // max proc
 $execute=0;
 
 $w = count(file("$list"));
-file_put_contents('sOGrep.htm', '<pre>['.@date("Y/m/d").'] REPORT<br>', FILE_APPEND);
 echo "\n[+]TOTLE LOADED : $w HOSTS\n[+]GOODLUCK\n\n"; sleep(5);
 foreach (file("$list", FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) as $ipkey => $line) 
 {
@@ -69,7 +65,7 @@ foreach (file("$list", FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) as $ipkey 
 			{
 				$status = pcntl_wexitstatus($status);
 				$execute =0;
-				usleep(3000);
+				//usleep(3000);
 				//echo " [$ipkey]  Child $status completed\n";
 			}
 		}
@@ -78,7 +74,7 @@ foreach (file("$list", FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) as $ipkey 
 		{
 			$shod_ports = array();
 			$nmap_ports = array();
-			$notneeded_ports = array(21, 123, 1234, 23, 3306, 5060, 995, 445, 25, 123, 179, 53, 500, 622, 753, 760, 786, 810, 894, 5000, 5001, 975, 69, 22, 465, 587, 993);
+			$notneeded_ports = array(21, 123, 23, 3306, 5060, 995, 445, 25, 123, 179, 53, 500, 622, 753, 760, 786, 810, 894,975, 69, 22, 465, 587, 993);
 			preg_match_all(';[0-9]{1,6}/tcp;', @shell_exec("nmap -sV -T4 -O -F --version-light -Pn --open $match[1]"), $matches);
 			//preg_match_all(';[0-9]{1,6}/tcp;', @shell_exec("nmap -Pn --open $match[1]"), $matches);
 			foreach ($matches as $value)
@@ -94,7 +90,7 @@ foreach (file("$list", FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) as $ipkey 
 			{
 				$shod_ports[] = trim($shport);
 			}
-			$our_ports = array(443, 80, 9999, 8080);
+			$our_ports = array(443, 8443, 80, 81, 9999, 8080, 8098);
 			if(!empty($shodan))
 			{
 				$ports = array_unique(array_merge($our_ports, $shod_ports, $nmap_ports));
@@ -106,7 +102,7 @@ foreach (file("$list", FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) as $ipkey 
 			{
 				if (!in_array($requested_port, $notneeded_ports))
 				{	
-					if(preg_match('/443/', $requested_port))
+					if(preg_match('/443/', $requested_port) || preg_match('/8443/', $requested_port))
 					{
 						$scheme= "https";
 					}else{
@@ -116,11 +112,18 @@ foreach (file("$list", FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) as $ipkey 
 					$result = sIP_Check( $match[1], $scheme, $requested_port);
 					if($result)
 					{
+						if(strlen($result) >=50)
+						{
+							$filetitle = strip_tags(substr($myStr, 0, 50));
+						}else{
+							$filetitle = strip_tags($result);
+						}
+						echo "\e[32m [$ipkey][$portkey]\e[0m \e[31m $match[1]:$requested_port\e[0m | '\e[33;1m $filetitle \e[0m'\n";
 						
-						echo "\e[32m [$ipkey][$portkey]\e[0m \e[31m $match[1]:$requested_port\e[0m | '\e[33;1m $result \e[0m'\n";
+                        file_put_contents("./sorted/$filetitle.sip0rg", "$match[1]:$requested_port $filetitle\n", FILE_APPEND);
 					}
 				}
-			usleep(2000);
+			 //usleep(2000);
 			}
 		exit;
 		}
@@ -131,7 +134,7 @@ foreach (file("$list", FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) as $ipkey 
 echo "\n\nDONE!. TOTAL $ipkey HOSTS EXECUTED\n";
 
 
-function sIP_Check( $urls, $scheme='', $request_port='', $path='', $timeout = 10 )
+function sIP_Check( $urls, $scheme='', $request_port='', $path='', $timeout = 200 )
 {
 	
 	if (empty($request_port))
@@ -151,8 +154,8 @@ function sIP_Check( $urls, $scheme='', $request_port='', $path='', $timeout = 10
 	curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 	curl_setopt($ch, CURLOPT_AUTOREFERER, true);
-	curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
-	curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT_MS, $timeout);
+    curl_setopt($ch, CURLOPT_TIMEOUT_MS, $timeout);
 	curl_setopt($ch, CURLOPT_MAXREDIRS, 3);
 	$content  = curl_exec($ch);
 	$auth  	  = curl_getinfo($ch , CURLINFO_HTTPAUTH_AVAIL);
@@ -214,133 +217,17 @@ function sIP_Check( $urls, $scheme='', $request_port='', $path='', $timeout = 10
 		}
 
 		//return array($response['http_code'],$title);
-		if(!empty($title))
+		if (!empty($title)) 
 		{
-			if(preg_match('/Polycom/', $title))
+			if(preg_match("/Bad Request/", $title) || preg_match("/HTTPS port/", $title))
 			{
-				$dir= $GLOBALS['brutedir']."/polycom";
-				if(!file_exists($dir) ){ mkdir($dir); }
-				$path_burte= $dir. "/". $urls;
-				$fp = file_put_contents($path_burte, $url);
-				
-				$head_server_title = server_header($url);
-				if(preg_match("/SoundPoint IP Telephone/i", $head_server_title))
-				{ 
-					//Polycom SoundPoint IP Telephone
-					$newtitle = $title." | <font color='#ee42f4'>PolycomSPIT</font>";
-					$msg = '<tr><th scope="row"><a href="'.$url.'" target="_blank">'.$url.'</a></th><td><font color=green> '. $newtitle .'</font> | <a href="./bruter.php?path='.file_get_contents($path_burte).'&type=polycomSPIT&l=1" target="_blank">[BruteMe]</a></td></tr>';
-				}else{
-					//Server: Restlet-Framework/2.1.7
-					if(preg_match("/Restlet/i", server_header(url_base($url) . "/rest/session")))
-					{ 
-						$newtitle = $title ." | PolycomRestlet";
-						$msg = '<tr><th scope="row"><a href="'.$url.'" target="_blank">'.$url.'</a></th><td><font color=green> '. $newtitle .'</font> | <a href="./bruter.php?path='.file_get_contents($path_burte).'&type=polycomRT&l=1" target="_blank">[BruteMe]</a></td></tr>';
-					}else{
-						//Server: lighttpd
-						if(preg_match("/lighttpd/", $head_server_title) && preg_match("/GetCurrentPageName/i", $title))
-						{ 
-							$title = "Polycom OLD";
-							$msg = '<tr><th scope="row"><a href="'.$url.'" target="_blank">'.$url.'</a></th><td><font color=green> '. $title .'</font> | <a href="./bruter.php?path='.file_get_contents($path_burte).'&type=polycomOLD&l=1" target="_blank">[BruteMe]</a></td></tr>';
-						}else{
-							$msg = '<tr><th scope="row"><a href="'.$url.'" target="_blank">'.$url.'</a></th><td><font color=green> '. $title .'</font></td></tr>';
-						}
-					}
-				}
-				
-				if($fp){ file_put_contents('sOGrep.htm', $msg .'<br>', FILE_APPEND);}
-				return $title;
-				
+				return sIP_Check( $http['host'] , "https://", $http['port'], $path);
 			}
-			if(preg_match('/D-Link/', $title))
-			{
-				$msg = '<tr><th scope="row"><a href="'.$url.'" target="_blank">'.$url.'</a></th><td><font color=green> '. $title .'</font><a href="https://www.exploit-db.com/papers/30061/" target="_blank"><font color=red> D-Link Bugs</font></a></td></tr>';
-				file_put_contents('sOGrep.htm', $msg .'<br>', FILE_APPEND);
-				return $title;
-			}
-			if(preg_match('/Vigor/', $title))
-			{
-				$dir= $GLOBALS['brutedir']."/vigor";
-				if(!file_exists($dir) ){ mkdir($dir); }
-				
-				$path_burte= $dir. "/". $urls;
-				$fp = file_put_contents($path_burte, $url);
-				if($fp)
-				{	
-					$msg = '<tr><th scope="row"><a href="'.$url.'" target="_blank">'.$url.'</a></th><td><font color=green> '. $title .'</font> | <a href="./bruter.php?path='.file_get_contents($path_burte).'&type=vigor" target="_blank">[BruteMe]</a></td></tr>';
-					file_put_contents('sOGrep.htm', $msg .'<br>', FILE_APPEND);
-					return $title;
-				}
-			}
-			if($response['http_code']=="401")
-			{
-
-				if($auth=="1")
-				{
-					
-					$dir= $GLOBALS['brutedir']."/auth1";
-					if(!file_exists($dir) ){ mkdir($dir); }
-					
-					$path_burte= $dir. "/". $urls;
-					$fp = file_put_contents($path_burte, $url);
-					if($fp)
-					{	
-						$msg = '<tr><th scope="row"><a href="'.$url.'" target="_blank">'.$url.'</a></th><td><font color=green> '. $title .'</font> | <a href="./bruter.php?path='.file_get_contents($path_burte).'&type=basic" target="_blank">[BruteMe]</a></td></tr>';
-						file_put_contents('sOGrep.htm', $msg .'<br>', FILE_APPEND);
-						return $title;
-					}
-				}
 			
-				if($auth=="2")
-				{
-					$dir= $GLOBALS['brutedir']."/auth2";
-					if(!file_exists($dir) ){ mkdir($dir); }
-					
-					$path_burte= $dir. "/". $urls;
-					$fp = file_put_contents($path_burte, $url);
-					if($fp)
-					{
-						$msg = '<tr><th scope="row"><a href="'.$url.'" target="_blank">'.$url.'</a></th><td><font color=green> '. $title.'</font> | <a href="./bruter.php?path='.file_get_contents($path_burte).'&type=digest" target="_blank">[BruteMe]</a></td></tr>';
-						file_put_contents('sOGrep.htm', $msg .'<br>', FILE_APPEND);
-						return $title;
-					}
-				}
-			}
-			if (preg_match("/VoIP Gateway/", $title))
-			{
-				$dir= $GLOBALS['brutedir']."/voipgateway";
-				if(!file_exists($dir) ){ mkdir($dir); }
-				
-				$path_burte= $dir. "/". $urls;
-				$fp = file_put_contents($path_burte, $url);
-				if($fp)
-				{	
-					$msg = '<tr><th scope="row"><a href="'.$url.'" target="_blank">'.$url.'</a></th><td><font color=green> '. $title .'</font> | <a href="./voipgatewaybrute.php?path='.file_get_contents($path_burte).'" target="_blank">[BruteMe]</a></td></tr>';
-					file_put_contents('sOGrep.htm', $msg .'<br>', FILE_APPEND);
-					return $title;
-				}
-			}
-			if($title)
-			{
-				$msg = '<tr><th scope="row"><a href="'.$url.'" target="_blank">'.$url.'</a></th><td><font color=green> '.$title.'</font></td></tr>';
-				file_put_contents('sOGrep.htm', $msg .'<br>', FILE_APPEND);
-				return $title;
-			}
-		}else{
-			if($response['http_code']!="0")
-			{	
-				$textinside = trim(str_replace(" ", "",str_replace("\n", "",substr(strip_tags($content), 0, 20))));
-				
-				$msg = '<tr><th scope="row"><a href="'.$url.'" target="_blank">'.$url.'</a></th><td><font color=green>UNKNOWN</font> | '.$textinside.'</td></tr>';
-				file_put_contents('sOGrep.htm', $msg .'<br>', FILE_APPEND);
-				return " UNKNOWN| ".$textinside;
-			}
-			if($response['http_code']=="404")
-			{
-				$msg = '<tr><th scope="row"><a href="'.$url.'" target="_blank">'.$url.'</a></th><td><font color=blue>ERR404</font></td></tr>';
-				file_put_contents('sOGrep.htm', $msg .'<br>', FILE_APPEND);
-				return " 404ERR";
-			}
-		}
+            echo $url . " =>                  " .$title."\n";
+            file_put_contents("results.txt", $url . " =>                  " .$title . "\n", FILE_APPEND);
+            file_put_contents("/root/backup/$title.txt",$url . " =>                  " .$title . "\n",FILE_APPEND);
+        }
 	}
 }
 function url_base($url)
@@ -354,7 +241,7 @@ function url_base($url)
 	}
 	return $url;
 }
-function shodan($host, $timeout = 4 )
+function shodan($host, $timeout = 400 )
 {
 	$ch = curl_init();
 	curl_setopt( $ch, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:56.0) Gecko/20100101 Firefox/56.0" );
@@ -362,8 +249,8 @@ function shodan($host, $timeout = 4 )
 	curl_setopt( $ch, CURLOPT_SSL_VERIFYHOST, 0);
 	curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, 0);
 	curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
-	curl_setopt( $ch, CURLOPT_CONNECTTIMEOUT, $timeout );
-	curl_setopt( $ch, CURLOPT_TIMEOUT, $timeout );
+    curl_setopt( $ch, CURLOPT_CONNECTTIMEOUT_MS, $timeout);
+    curl_setopt( $ch, CURLOPT_TIMEOUT_MS, $timeout);
 	$content = curl_exec( $ch );
 	return getBetween($content, 'content="Ports open:', '" />');
 }
